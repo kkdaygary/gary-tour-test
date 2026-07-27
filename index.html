@@ -1,55 +1,326 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gary-tour-test · GitHub Pages 測試頁</title>
-  <style>
-    :root {
-      color-scheme: light dark;
-    }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: "Helvetica Neue", Arial, "PingFang TC", "Microsoft JhengHei", sans-serif;
-      background: linear-gradient(135deg, #1a2a6c, #2a5298);
-      color: #fff;
-    }
-    .card {
-      text-align: center;
-      padding: 3rem 4rem;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
-    h1 { margin: 0 0 0.5rem; font-size: 2rem; }
-    p { margin: 0.25rem 0; opacity: 0.85; }
-    .badge {
-      display: inline-block;
-      margin-top: 1.25rem;
-      padding: 0.4rem 1rem;
-      border-radius: 999px;
-      background: #22c55e;
-      color: #06280f;
-      font-weight: 700;
-    }
-    code {
-      background: rgba(0, 0, 0, 0.3);
-      padding: 0.1rem 0.4rem;
-      border-radius: 4px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>日本六選一 · 5天4夜行程提案</title>
+<meta name="description" content="大阪、福岡、仙台、神戶、茨城、札幌——六個地點的特色、必吃、必玩，各附一份 5 天 4 夜行程。" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23FBF9F5'/%3E%3Ccircle cx='50' cy='50' r='26' fill='%23C0392B'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
-  <main class="card">
-    <h1>🚀 GitHub Pages 部署測試</h1>
-    <p>這是 <code>gary-tour-test</code> 專案的靜態 HTML 測試頁面。</p>
-    <p>由 GitHub Actions 自動部署。</p>
-    <span class="badge">✅ 部署成功</span>
-  </main>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">JAPAN · 5 DAYS 4 NIGHTS</div>
+    <h1>六個地點，六份 <span class="sun">5天4夜</span> 提案</h1>
+    <p class="lede">
+      大阪、福岡、仙台、神戶、茨城、札幌——投票的這六個地點從北海道橫跨到九州，
+      5天4夜實際上只夠好好玩透一個。所以我幫每個地點各寫了一份完整行程：
+      它憑什麼值得去、五天怎麼排、必吃什麼、必玩哪裡，還有第一次去要注意的事。
+    </p>
+    <div class="hero-pills" id="heroPills"></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="地點導覽">
+  <div class="nav-inner" id="tabs" role="tablist"></div>
+</nav>
+
+<main class="wrap" id="panels"></main>
+
+<footer>
+  <div class="wrap">
+    <p>
+      內容為旅遊規劃建議，行程節奏與店家為個人推薦。
+      營業時間、票價、纜車與道路的季節性封閉（尤其藏王ハイライン、摩耶纜車休日、由布院之森訂位）
+      都可能變動，出發前請務必再確認官方資訊。
+    </p>
+    <p>季節限定的看點已標在各地點的「實用提醒」裡，挑月份時記得回頭看一下。</p>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="回到頂端">↑</button>
+
+<script src="assets/data.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var esc = function (s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  };
+
+  function findBy(key, val) {
+    for (var i = 0; i < DESTINATIONS.length; i++) {
+      if (DESTINATIONS[i][key] === val) return DESTINATIONS[i];
+    }
+    return null;
+  }
+
+  var accentOf = function (id) {
+    var d = findBy('id', id);
+    return d ? d.accent : '#C0392B';
+  };
+
+  var emojiOf = function (id) {
+    var d = findBy('id', id);
+    return d ? d.emoji : '📍';
+  };
+
+  var idOfName = function (name) {
+    var d = findBy('name', name);
+    return d ? d.id : '';
+  };
+
+  /* ── 總覽面板 ─────────────────────────────────────── */
+  function overviewPanel() {
+    var rows = OVERVIEW.map(function (o) {
+      return '<tr style="--row-accent:' + accentOf(o.id) + '">'
+        + '<td><button class="dest-link" data-goto="' + o.id + '">'
+        + emojiOf(o.id) + ' ' + esc(o.name) + '</button></td>'
+        + '<td>' + esc(o.region) + '</td>'
+        + '<td>' + esc(o.airport) + '</td>'
+        + '<td>' + esc(o.flight) + '</td>'
+        + '<td>' + esc(o.season) + '</td>'
+        + '<td>' + esc(o.good) + '</td>'
+        + '<td class="stars">'
+        + new Array(o.level + 1).join('★') + new Array(4 - o.level).join('☆')
+        + '<br><span style="font-size:.78rem">' + esc(o.levelText) + '</span></td>'
+        + '</tr>';
+    }).join('');
+
+    var picks = PICK_GUIDE.map(function (p) {
+      return '<div class="pick" style="border-left-color:' + accentOf(idOfName(p.a)) + '">'
+        + '<div class="q">' + esc(p.q) + '</div>'
+        + '<div class="a">' + emojiOf(idOfName(p.a)) + ' ' + esc(p.a) + '</div>'
+        + '<p class="why">' + esc(p.why) + '</p>'
+        + '</div>';
+    }).join('');
+
+    return '<section class="panel" id="panel-overview" role="tabpanel">'
+
+      + '<div class="section">'
+      + '<h2>先講一件重要的事</h2>'
+      + '<div class="note">'
+      + '<p><strong>這六個地點沒辦法在同一趟 5天4夜裡玩完。</strong>'
+      + '札幌在北海道、仙台在東北、茨城在關東、大阪跟神戶在關西、福岡在九州，'
+      + '光是南北兩端的移動就要耗掉一整天。</p>'
+      + '<p>所以這份網站的用法是：<strong>先用下面的比較表跟「怎麼選」決定一個地點</strong>，'
+      + '再點上方的頁籤看那個地點完整的五天怎麼走。'
+      + '大阪與神戶是唯一可以合併的一組（JR 只要 21 分鐘），神戶那份行程裡也已經考慮到這點。</p>'
+      + '</div>'
+      + '</div>'
+
+      + '<div class="section">'
+      + '<h2>六個地點比一比</h2>'
+      + '<div class="table-scroll"><table>'
+      + '<thead><tr>'
+      + '<th>地點</th><th>區域</th><th>進出機場</th><th>從台灣</th>'
+      + '<th>最佳季節</th><th>適合</th><th>上手度</th>'
+      + '</tr></thead><tbody>' + rows + '</tbody>'
+      + '</table></div>'
+      + '</div>'
+
+      + '<div class="section">'
+      + '<h2>那我該選哪個？</h2>'
+      + '<div class="grid c2">' + picks + '</div>'
+      + '</div>'
+
+      + '<div class="section">'
+      + '<h2>如果是團體投票，我的排序</h2>'
+      + '<div class="note">'
+      + '<p><strong>1. 大阪</strong>——第一次去日本的最穩解。吃、逛、古城、京都奈良全包，'
+      + '交通好懂，走錯路也救得回來，同行的人不管想幹嘛都有事做。</p>'
+      + '<p><strong>2. 札幌</strong>——如果時間落在二月或六到八月，它的體驗差異最大：'
+      + '台灣沒有的雪，跟台灣沒有的涼夏。缺點是機票最貴。</p>'
+      + '<p><strong>3. 福岡</strong>——CP 值第一。機場離市區五分鐘，物價低一截，'
+      + '而且可以順手把由布院溫泉排進去。</p>'
+      + '<p><strong>4. 神戶</strong>——想輕鬆一點、走文青路線，或已經去過大阪的話選這個。</p>'
+      + '<p><strong>5. 仙台</strong>——受不了人潮、喜歡溫泉與自然的人會愛。'
+      + '但直飛班次少，通常要從東京轉新幹線。</p>'
+      + '<p><strong>6. 茨城</strong>——最需要條件：要有國際駕照跟願意開車的人，'
+      + '而且日期要卡在花季。條件對了它很棒，條件不對就會很空。</p>'
+      + '</div>'
+      + '</div>'
+
+      + '</section>';
+  }
+
+  /* ── 地點面板 ─────────────────────────────────────── */
+  function destPanel(d) {
+    var facts = Object.keys(d.facts).map(function (k) {
+      return '<div class="row"><dt>' + esc(k) + '</dt><dd>' + esc(d.facts[k]) + '</dd></div>';
+    }).join('');
+
+    var why = d.why.map(function (w) {
+      return '<div class="why-card">'
+        + '<div class="ic">' + w.icon + '</div>'
+        + '<h3>' + esc(w.title) + '</h3>'
+        + '<p>' + esc(w.text) + '</p>'
+        + '</div>';
+    }).join('');
+
+    var days = d.itinerary.map(function (day) {
+      var blocks = day.blocks.map(function (b) {
+        return '<div class="blk">'
+          + '<div class="when">' + esc(b.when) + '</div>'
+          + '<div class="what">' + esc(b.text) + '</div>'
+          + '</div>';
+      }).join('');
+
+      var foot = '';
+      if (day.stay || day.tip) {
+        foot += '<div class="day-foot">';
+        if (day.stay) {
+          foot += '<div class="meta"><span class="lbl">住宿</span><span>' + esc(day.stay) + '</span></div>';
+        }
+        if (day.tip) {
+          foot += '<div class="meta tip"><span class="lbl">小提醒</span><span>' + esc(day.tip) + '</span></div>';
+        }
+        foot += '</div>';
+      }
+
+      return '<article class="day">'
+        + '<div class="day-head">'
+        + '<span class="day-num">DAY ' + day.day + '</span>'
+        + '<h3>' + esc(day.title) + '</h3>'
+        + '</div>'
+        + '<div class="day-body">' + blocks + foot + '</div>'
+        + '</article>';
+    }).join('');
+
+    var eats = d.eats.map(function (e) {
+      return '<div class="eat">'
+        + '<div class="top"><span class="nm">' + esc(e.name) + '</span>'
+        + '<span class="jp">' + esc(e.jp) + '</span></div>'
+        + '<p>' + esc(e.text) + '</p>'
+        + '<div class="where">' + esc(e.where) + '</div>'
+        + '</div>';
+    }).join('');
+
+    var plays = d.plays.map(function (p) {
+      return '<div class="play"><div class="nm">' + esc(p.name) + '</div>'
+        + '<p class="ds">' + esc(p.text) + '</p></div>';
+    }).join('');
+
+    var tips = d.tips.map(function (t) {
+      return '<li><span>' + esc(t) + '</span></li>';
+    }).join('');
+
+    return '<section class="panel" id="panel-' + d.id + '" role="tabpanel" style="--dest:' + d.accent + '">'
+
+      + '<div class="dest-head">'
+      + '<div class="big-emoji">' + d.emoji + '</div>'
+      + '<div class="romaji">' + esc(d.romaji) + '</div>'
+      + '<h2>' + esc(d.name) + '</h2>'
+      + '<div class="tagline">' + esc(d.tagline) + '</div>'
+      + '<p class="intro">' + esc(d.intro) + '</p>'
+      + '</div>'
+
+      + '<dl class="facts">' + facts + '</dl>'
+
+      + '<div class="section"><h2>為什麼值得去</h2>'
+      + '<div class="grid c2">' + why + '</div></div>'
+
+      + '<div class="section"><h2>5天4夜怎麼走</h2>'
+      + '<div class="days">' + days + '</div></div>'
+
+      + '<div class="section"><h2>必吃</h2>'
+      + '<div class="grid c2">' + eats + '</div></div>'
+
+      + '<div class="section"><h2>必玩景點</h2>'
+      + '<div class="plays">' + plays + '</div></div>'
+
+      + '<div class="section"><h2>實用提醒</h2>'
+      + '<ul class="tips">' + tips + '</ul></div>'
+
+      + '</section>';
+  }
+
+  /* ── 組裝 ─────────────────────────────────────────── */
+  var tabsEl = document.getElementById('tabs');
+  var panelsEl = document.getElementById('panels');
+  var heroEl = document.getElementById('heroPills');
+
+  var tabDefs = [{ id: 'overview', label: '總覽', accent: '#C0392B' }].concat(
+    DESTINATIONS.map(function (d) {
+      return { id: d.id, label: d.emoji + ' ' + d.name, accent: d.accent };
+    })
+  );
+
+  tabsEl.innerHTML = tabDefs.map(function (t) {
+    return '<button role="tab" data-tab="' + t.id + '" aria-selected="false"'
+      + ' style="--tab-accent:' + t.accent + '">' + t.label + '</button>';
+  }).join('') + '<button class="theme-toggle" id="themeToggle" aria-label="切換深淺色">◐</button>';
+
+  panelsEl.innerHTML = overviewPanel() + DESTINATIONS.map(destPanel).join('');
+
+  heroEl.innerHTML = DESTINATIONS.map(function (d) {
+    return '<button class="hero-pill" data-goto="' + d.id + '">'
+      + d.emoji + ' ' + esc(d.name) + '</button>';
+  }).join('');
+
+  function show(id, push) {
+    var panel = document.getElementById('panel-' + id);
+    if (!panel) { id = 'overview'; panel = document.getElementById('panel-overview'); }
+
+    Array.prototype.forEach.call(document.querySelectorAll('.panel'), function (p) {
+      p.classList.toggle('is-active', p === panel);
+    });
+    Array.prototype.forEach.call(tabsEl.querySelectorAll('[data-tab]'), function (b) {
+      var on = b.getAttribute('data-tab') === id;
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+      if (on) b.scrollIntoView({ block: 'nearest', inline: 'center' });
+    });
+
+    if (push && location.hash.slice(1) !== id) {
+      history.pushState(null, '', '#' + id);
+    }
+    window.scrollTo({ top: 0 });
+  }
+
+  document.addEventListener('click', function (e) {
+    var tab = e.target.closest('[data-tab]');
+    if (tab) { show(tab.getAttribute('data-tab'), true); return; }
+
+    var go = e.target.closest('[data-goto]');
+    if (go) { show(go.getAttribute('data-goto'), true); return; }
+  });
+
+  window.addEventListener('hashchange', function () {
+    show(location.hash.slice(1) || 'overview', false);
+  });
+
+  /* 深淺色切換 */
+  var toggle = document.getElementById('themeToggle');
+  var stored = null;
+  try { stored = localStorage.getItem('theme'); } catch (err) { /* 隱私模式下忽略 */ }
+  if (stored) document.documentElement.setAttribute('data-theme', stored);
+
+  toggle.addEventListener('click', function () {
+    var cur = document.documentElement.getAttribute('data-theme');
+    if (!cur) {
+      cur = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    var next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (err) { /* 忽略 */ }
+  });
+
+  /* 回到頂端 */
+  var toTop = document.getElementById('toTop');
+  window.addEventListener('scroll', function () {
+    toTop.classList.toggle('show', window.scrollY > 700);
+  }, { passive: true });
+  toTop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  show(location.hash.slice(1) || 'overview', false);
+})();
+</script>
 </body>
 </html>
