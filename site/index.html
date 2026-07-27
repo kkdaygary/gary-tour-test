@@ -43,6 +43,8 @@
 <button class="to-top" id="toTop" aria-label="回到頂端">↑</button>
 
 <script src="assets/data.js"></script>
+<script src="assets/credits.js"></script>
+<script src="assets/extra.js"></script>
 <script>
 (function () {
   'use strict';
@@ -52,6 +54,28 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   };
+
+  /* ── 照片：用 Wikimedia Special:FilePath 組出公開連結 ── */
+  var CREDIT_INDEX = {};
+  (typeof CREDITS !== 'undefined' ? CREDITS : []).forEach(function (c) {
+    CREDIT_INDEX[c.dest + '/' + c.slug] = c;
+  });
+
+  function creditBySlug(dest, slug) {
+    return CREDIT_INDEX[dest + '/' + slug] || null;
+  }
+
+  // 從 credits.js 的 source（File: 頁）轉成可直接 <img> 的縮圖網址
+  function imgUrl(dest, slug, width) {
+    var c = creditBySlug(dest, slug);
+    if (!c || !c.source) return '';
+    var file = c.source.replace('https://commons.wikimedia.org/wiki/File:', '');
+    return 'https://commons.wikimedia.org/wiki/Special:FilePath/' + file + '?width=' + (width || 1200);
+  }
+
+  function extraOf(id) {
+    return (typeof EXTRA !== 'undefined' && EXTRA[id]) ? EXTRA[id] : {};
+  }
 
   function findBy(key, val) {
     for (var i = 0; i < DESTINATIONS.length; i++) {
@@ -100,7 +124,34 @@
         + '</div>';
     }).join('');
 
+    var cards = DESTINATIONS.map(function (d) {
+      var x = extraOf(d.id);
+      var url = x.hero ? imgUrl(d.id, x.hero, 700) : '';
+      var thumb = url
+        ? '<img src="' + url + '" alt="' + esc(d.name) + '" loading="lazy" />'
+        : '';
+      var ov = null;
+      for (var oi = 0; oi < OVERVIEW.length; oi++) {
+        if (OVERVIEW[oi].id === d.id) { ov = OVERVIEW[oi]; break; }
+      }
+      var meta = ov
+        ? '<div class="mt"><span>' + esc(ov.region) + '</span><span>' + esc(ov.good) + '</span></div>'
+        : '';
+      return '<button class="dest-card" data-goto="' + d.id + '" style="--dest:' + d.accent + '">'
+        + '<div class="thumb">' + thumb
+        + '<span class="badge">' + d.emoji + ' ' + esc(d.name) + '</span></div>'
+        + '<div class="body">'
+        + '<div class="tl">' + esc(d.tagline) + '</div>'
+        + meta
+        + '</div></button>';
+    }).join('');
+
     return '<section class="panel" id="panel-overview" role="tabpanel">'
+
+      + '<div class="section">'
+      + '<h2>六個地點</h2>'
+      + '<div class="dest-cards">' + cards + '</div>'
+      + '</div>'
 
       + '<div class="section">'
       + '<h2>先講一件重要的事</h2>'
@@ -201,22 +252,97 @@
         + '</div>';
     }).join('');
 
+    var x = extraOf(d.id);
+    var playImg = x.playImg || {};
+    var usedSlugs = {};
+
     var plays = d.plays.map(function (p) {
-      return '<div class="play"><div class="nm">' + esc(p.name) + '</div>'
-        + '<p class="ds">' + esc(p.text) + '</p></div>';
+      var slug = playImg[p.name];
+      var ph;
+      if (slug) {
+        usedSlugs[slug] = true;
+        ph = '<div class="ph"><img src="' + imgUrl(d.id, slug, 640)
+          + '" alt="' + esc(p.name) + '" loading="lazy" /></div>';
+      } else {
+        ph = '<div class="ph no-img">' + d.emoji + '</div>';
+      }
+      return '<figure class="play-card">' + ph
+        + '<figcaption><div class="nm">' + esc(p.name) + '</div>'
+        + '<p class="ds">' + esc(p.text) + '</p></figcaption></figure>';
+    }).join('');
+
+    /* 怎麼玩：第一次 vs 深度 */
+    var howto = '';
+    if (x.howto) {
+      var col = function (title, items) {
+        var lis = (items || []).map(function (i) {
+          return '<li><span><strong>' + esc(i.t) + '</strong>' + esc(i.d) + '</span></li>';
+        }).join('');
+        return '<ul>' + lis + '</ul>';
+      };
+      howto = '<div class="grid c2">'
+        + '<div class="howto-col first"><h3>🧭 第一次來，這樣玩不會錯</h3>'
+        + col('first', x.howto.first) + '</div>'
+        + '<div class="howto-col deep"><h3>🔍 想玩深一點，像在地人</h3>'
+        + col('deep', x.howto.deep) + '</div>'
+        + '</div>';
+    }
+
+    /* 喝（沿用必吃卡片樣式） */
+    var drinks = (x.drinks || []).map(function (e) {
+      return '<div class="eat">'
+        + '<div class="top"><span class="nm">' + esc(e.name) + '</span>'
+        + '<span class="jp">' + esc(e.jp) + '</span></div>'
+        + '<p>' + esc(e.text) + '</p>'
+        + '<div class="where">' + esc(e.where) + '</div>'
+        + '</div>';
+    }).join('');
+
+    /* 伴手禮 */
+    var souvenirs = (x.souvenirs || []).map(function (e) {
+      return '<div class="eat">'
+        + '<div class="top"><span class="nm">' + esc(e.name) + '</span>'
+        + '<span class="jp">' + esc(e.jp) + '</span></div>'
+        + '<p>' + esc(e.text) + '</p>'
+        + '<div class="where">' + esc(e.where) + '</div>'
+        + '</div>';
     }).join('');
 
     var tips = d.tips.map(function (t) {
       return '<li><span>' + esc(t) + '</span></li>';
     }).join('');
 
+    /* 照片版權（本頁用到的圖） */
+    if (x.hero) usedSlugs[x.hero] = true;
+    var creditItems = Object.keys(usedSlugs).map(function (slug) {
+      return creditBySlug(d.id, slug);
+    }).filter(Boolean).map(function (c) {
+      return '<li>' + esc(c.title) + ' — ' + esc(c.artist)
+        + '（' + esc(c.license) + '）· '
+        + '<a href="' + esc(c.source) + '" target="_blank" rel="noopener">來源</a></li>';
+    }).join('');
+    var credits = creditItems
+      ? '<details class="credits"><summary>照片版權與授權（Wikimedia Commons）</summary><ul>'
+        + creditItems + '</ul></details>'
+      : '';
+
+    var heroUrl = x.hero ? imgUrl(d.id, x.hero, 1600) : '';
+    var hero = heroUrl
+      ? '<div class="dest-hero">'
+        + '<img src="' + heroUrl + '" alt="' + esc(d.name) + '" />'
+        + '<div class="scrim"></div>'
+        + '<div class="big-emoji">' + d.emoji + '</div>'
+        + '<div class="cap">'
+        + '<div class="romaji">' + esc(d.romaji) + '</div>'
+        + '<h2>' + esc(d.name) + '</h2>'
+        + '<div class="tagline">' + esc(d.tagline) + '</div>'
+        + '</div></div>'
+      : '';
+
     return '<section class="panel" id="panel-' + d.id + '" role="tabpanel" style="--dest:' + d.accent + '">'
 
+      + hero
       + '<div class="dest-head">'
-      + '<div class="big-emoji">' + d.emoji + '</div>'
-      + '<div class="romaji">' + esc(d.romaji) + '</div>'
-      + '<h2>' + esc(d.name) + '</h2>'
-      + '<div class="tagline">' + esc(d.tagline) + '</div>'
       + '<p class="intro">' + esc(d.intro) + '</p>'
       + '</div>'
 
@@ -225,17 +351,26 @@
       + '<div class="section"><h2>為什麼值得去</h2>'
       + '<div class="grid c2">' + why + '</div></div>'
 
+      + (howto ? '<div class="section"><h2>怎麼玩：第一次 vs 深度</h2>' + howto + '</div>' : '')
+
       + '<div class="section"><h2>5天4夜怎麼走</h2>'
       + '<div class="days">' + days + '</div></div>'
 
       + '<div class="section"><h2>必吃</h2>'
       + '<div class="grid c2">' + eats + '</div></div>'
 
+      + (drinks ? '<div class="section"><h2>喝什麼</h2>'
+        + '<div class="grid c2">' + drinks + '</div></div>' : '')
+
       + '<div class="section"><h2>必玩景點</h2>'
-      + '<div class="plays">' + plays + '</div></div>'
+      + '<div class="play-grid">' + plays + '</div></div>'
+
+      + (souvenirs ? '<div class="section"><h2>伴手禮怎麼買</h2>'
+        + '<div class="grid c2">' + souvenirs + '</div></div>' : '')
 
       + '<div class="section"><h2>實用提醒</h2>'
-      + '<ul class="tips">' + tips + '</ul></div>'
+      + '<ul class="tips">' + tips + '</ul>'
+      + credits + '</div>'
 
       + '</section>';
   }
