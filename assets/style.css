@@ -253,38 +253,71 @@ tbody tr:hover { background: var(--paper-3); }
 .note strong { color: var(--ink); }
 .note p:last-child { margin-bottom: 0; }
 
-/* ── 地點頁首 ───────────────────────────────────────── */
-.dest-head {
+/* ── 地點主視覺（照片橫幅）─────────────────────────── */
+.dest-hero {
   position: relative;
   border-radius: 18px;
-  padding: 30px 28px;
-  margin-bottom: 40px;
-  background:
-    linear-gradient(135deg,
-      color-mix(in srgb, var(--dest) 16%, var(--paper-2)),
-      var(--paper-2) 70%);
-  border: 1px solid var(--line);
   overflow: hidden;
+  margin-bottom: 22px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--dest) 14%, var(--paper-2));
+  aspect-ratio: 16 / 7;
 }
-.dest-head .big-emoji {
+.dest-hero img {
   position: absolute;
-  right: 18px; top: 50%;
-  transform: translateY(-50%);
-  font-size: clamp(4rem, 16vw, 8rem);
-  opacity: .13;
-  pointer-events: none;
-  line-height: 1;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
 }
-.dest-head .romaji {
+.dest-hero .scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(10, 8, 6, .82) 0%,
+    rgba(10, 8, 6, .30) 42%,
+    rgba(10, 8, 6, .05) 70%,
+    transparent 100%);
+}
+.dest-hero .cap {
+  position: absolute;
+  left: clamp(18px, 4vw, 34px);
+  right: clamp(18px, 4vw, 34px);
+  bottom: clamp(16px, 3.5vw, 30px);
+  color: #fff;
+}
+.dest-hero .big-emoji {
+  position: absolute;
+  right: clamp(14px, 3vw, 26px);
+  top: clamp(12px, 3vw, 22px);
+  font-size: clamp(2.4rem, 8vw, 4.2rem);
+  line-height: 1;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,.4));
+}
+.dest-hero .romaji {
   font-size: .74rem;
   letter-spacing: .28em;
-  color: var(--dest);
-  font-weight: 700;
-  margin-bottom: 8px;
+  color: color-mix(in srgb, var(--dest) 60%, #fff);
+  font-weight: 800;
+  margin-bottom: 6px;
+  text-shadow: 0 1px 6px rgba(0,0,0,.5);
 }
-.dest-head h2 { font-size: clamp(1.9rem, 6vw, 2.7rem); margin-bottom: 6px; }
-.dest-head .tagline { color: var(--dest); font-weight: 600; margin-bottom: 14px; }
-.dest-head .intro { max-width: 60ch; color: var(--ink-2); margin: 0; position: relative; }
+.dest-hero h2 {
+  font-size: clamp(1.9rem, 6vw, 2.9rem);
+  margin-bottom: 6px;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,.55);
+}
+.dest-hero .tagline {
+  color: #fff;
+  font-weight: 600;
+  font-size: clamp(.92rem, 2.6vw, 1.06rem);
+  text-shadow: 0 1px 8px rgba(0,0,0,.6);
+}
+
+.dest-head { margin-bottom: 40px; }
+.dest-head .intro { max-width: 62ch; color: var(--ink-2); margin: 0; font-size: 1.02rem; }
 
 .facts { display: grid; gap: 0; margin-bottom: 44px; border-top: 1px solid var(--line); }
 .facts .row {
@@ -408,6 +441,127 @@ tbody tr:hover { background: var(--paper-3); }
 }
 .tips li::before { content: "✓"; color: var(--dest); font-weight: 800; }
 
+/* ── 總覽：六地視覺卡片 ─────────────────────────────── */
+.dest-cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.dest-card {
+  --dest: var(--accent);
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--paper-2);
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: transform .15s, box-shadow .15s;
+}
+.dest-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.dest-card .thumb {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  background: color-mix(in srgb, var(--dest) 16%, var(--paper-3));
+  overflow: hidden;
+}
+.dest-card .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.dest-card .thumb .badge {
+  position: absolute;
+  left: 12px; bottom: 10px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.15rem;
+  text-shadow: 0 1px 8px rgba(0,0,0,.7);
+}
+.dest-card .thumb::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(10,8,6,.6), transparent 55%);
+}
+.dest-card .body { padding: 13px 16px 16px; display: flex; flex-direction: column; gap: 6px; }
+.dest-card .tl { color: var(--dest); font-weight: 600; font-size: .9rem; }
+.dest-card .mt { font-size: .82rem; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+
+/* ── 怎麼玩：第一次 vs 深度 ─────────────────────────── */
+.howto-col {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+}
+.howto-col.deep { background: var(--paper-3); }
+.howto-col h3 {
+  font-size: 1.02rem;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 8px;
+}
+.howto-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.howto-col li { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
+.howto-col li::before {
+  content: "";
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--dest);
+  margin-top: .55em;
+}
+.howto-col.deep li::before { background: var(--ink-3); }
+.howto-col li strong { display: block; font-size: .95rem; margin-bottom: 2px; }
+.howto-col li span { font-size: .88rem; color: var(--ink-2); line-height: 1.7; }
+
+/* ── 必玩景點：照片藝廊 ─────────────────────────────── */
+.play-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(238px, 1fr)); }
+.play-card {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--paper-2);
+  display: flex;
+  flex-direction: column;
+}
+.play-card .ph {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: color-mix(in srgb, var(--dest) 14%, var(--paper-3));
+  overflow: hidden;
+}
+.play-card .ph img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .4s ease;
+}
+.play-card:hover .ph img { transform: scale(1.05); }
+.play-card .ph.no-img {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.6rem; opacity: .5;
+}
+.play-card figcaption { padding: 13px 16px 16px; }
+.play-card .nm { font-weight: 700; font-size: .98rem; margin-bottom: 5px; }
+.play-card .ds { font-size: .87rem; color: var(--ink-2); margin: 0; line-height: 1.7; }
+
+/* ── 照片版權 ───────────────────────────────────────── */
+.credits {
+  margin-top: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-2);
+  font-size: .82rem;
+}
+.credits summary {
+  cursor: pointer;
+  padding: 12px 16px;
+  color: var(--ink-3);
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+.credits summary::marker { color: var(--dest); }
+.credits ul { list-style: none; margin: 0; padding: 0 16px 14px; display: grid; gap: 7px; }
+.credits li { color: var(--ink-3); line-height: 1.55; }
+.credits a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; }
+
 /* ── 頁尾 ───────────────────────────────────────────── */
 footer {
   border-top: 1px solid var(--line);
@@ -444,6 +598,10 @@ footer p { margin: 0 0 .6em; max-width: 70ch; }
   .facts .row { grid-template-columns: 1fr; gap: 2px; }
   .play { grid-template-columns: 1fr; gap: 3px; }
   .section { margin-bottom: 40px; }
+  .dest-hero { aspect-ratio: 3 / 2; }
+  .play-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .play-card figcaption { padding: 11px 13px 13px; }
+  .dest-cards { grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
