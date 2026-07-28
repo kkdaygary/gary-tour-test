@@ -326,6 +326,47 @@
         + creditItems + '</ul></details>'
       : '';
 
+    /* 季節限定 */
+    var seasonal = '';
+    if (x.seasonal && x.seasonal.length) {
+      var sc = x.seasonal.map(function (s) {
+        return '<div class="season-card">'
+          + (s.tag ? '<span class="tag">' + esc(s.tag) + '</span>' : '')
+          + '<h3>' + esc(s.title) + '</h3>'
+          + '<p>' + esc(s.text) + '</p></div>';
+      }).join('');
+      seasonal = '<div class="section"><h2>季節限定</h2>'
+        + '<p class="data-note">資訊查證於 2026 年 7 月；活動日期與票價以官方最新公告為準。</p>'
+        + '<div class="grid c2">' + sc + '</div></div>';
+    }
+
+    /* 最新情報：新開與必知 */
+    var whatsnew = '';
+    if (x.whatsnew && x.whatsnew.length) {
+      var nc = x.whatsnew.map(function (n) {
+        return '<div class="eat">'
+          + '<div class="top"><span class="nm">' + esc(n.name) + '</span>'
+          + (n.tag ? '<span class="tag-new">' + esc(n.tag) + '</span>' : '') + '</div>'
+          + (n.when ? '<div class="when-badge">' + esc(n.when) + '</div>' : '')
+          + '<p>' + esc(n.text) + '</p></div>';
+      }).join('');
+      whatsnew = '<div class="section"><h2>最新情報：新開與必知</h2>'
+        + '<div class="grid c2">' + nc + '</div></div>';
+    }
+
+    /* 美食名店口袋清單 */
+    var foodPicks = (x.foodPicks || []).map(function (e) {
+      return '<div class="eat">'
+        + '<div class="top"><span class="nm">' + esc(e.name) + '</span>'
+        + '<span class="jp">' + esc(e.jp) + '</span></div>'
+        + '<p>' + esc(e.text) + '</p>'
+        + '<div class="where">' + esc(e.where) + '</div></div>';
+    }).join('');
+    var foodPicksSec = foodPicks
+      ? '<div class="section"><h2>美食名店口袋清單</h2>'
+        + '<div class="grid c2">' + foodPicks + '</div></div>'
+      : '';
+
     var heroUrl = x.hero ? imgUrl(d.id, x.hero, 1600) : '';
     var hero = heroUrl
       ? '<div class="dest-hero">'
@@ -351,6 +392,9 @@
       + '<div class="section"><h2>為什麼值得去</h2>'
       + '<div class="grid c2">' + why + '</div></div>'
 
+      + seasonal
+      + whatsnew
+
       + (howto ? '<div class="section"><h2>怎麼玩：第一次 vs 深度</h2>' + howto + '</div>' : '')
 
       + '<div class="section"><h2>5天4夜怎麼走</h2>'
@@ -358,6 +402,8 @@
 
       + '<div class="section"><h2>必吃</h2>'
       + '<div class="grid c2">' + eats + '</div></div>'
+
+      + foodPicksSec
 
       + (drinks ? '<div class="section"><h2>喝什麼</h2>'
         + '<div class="grid c2">' + drinks + '</div></div>' : '')

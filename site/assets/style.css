@@ -510,6 +510,32 @@ tbody tr:hover { background: var(--paper-3); }
 .howto-col li strong { display: block; font-size: .95rem; margin-bottom: 2px; }
 .howto-col li span { font-size: .88rem; color: var(--ink-2); line-height: 1.7; }
 
+/* ── 季節限定 ───────────────────────────────────────── */
+.data-note { font-size: .82rem; color: var(--ink-3); margin: -8px 0 18px; }
+.season-card {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+.season-card .tag {
+  display: inline-block;
+  font-size: .72rem; font-weight: 800; letter-spacing: .06em;
+  color: #fff; background: var(--dest);
+  border-radius: 999px; padding: 3px 11px; margin-bottom: 11px;
+}
+.season-card h3 { font-size: 1rem; margin-bottom: 7px; }
+.season-card p { font-size: .89rem; color: var(--ink-2); margin: 0; line-height: 1.78; }
+
+/* ── 最新情報（沿用 .eat 卡片，加 when / tag）─────────── */
+.eat .when-badge { font-size: .74rem; font-weight: 700; color: var(--dest); margin-bottom: 7px; }
+.eat .tag-new {
+  display: inline-block;
+  font-size: .68rem; font-weight: 800; letter-spacing: .05em;
+  color: #fff; background: var(--dest);
+  border-radius: 999px; padding: 2px 9px; margin-left: 6px;
+}
+
 /* ── 必玩景點：照片藝廊 ─────────────────────────────── */
 .play-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(238px, 1fr)); }
 .play-card {
