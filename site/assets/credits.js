@@ -463,5 +463,17 @@ const CREDITS = [
     "artist": "Tak1701d",
     "license": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Osaki_Hachiman-gu_20130819b.jpg"
-  }
+  },
+  {"dest": "kanazawa", "slug": "kanazawa-hero", "title": "The rainbow bridge and the Kotojitoro stone lantern in the Kenrokuen Garden in Kanazawa (53621075708).jpg", "artist": "Winniepix", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:The_rainbow_bridge_and_the_Kotojitoro_stone_lantern_in_the_Kenrokuen_Garden_in_Kanazawa_%2853621075708%29.jpg"},
+  {"dest": "kanazawa", "slug": "kenrokuen", "title": "Kenrokuen Garden, Kanazawa (53621201294).jpg", "artist": "Winniepix", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:Kenrokuen_Garden%2C_Kanazawa_%2853621201294%29.jpg"},
+  {"dest": "kanazawa", "slug": "kanazawa-castle", "title": "Ishikawa Yagura of Kanazawa Castle from Ishikawabashi Bridge in front of Ishikawa Gate.JPG", "artist": "そらみみ", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Ishikawa_Yagura_of_Kanazawa_Castle_from_Ishikawabashi_Bridge_in_front_of_Ishikawa_Gate.JPG"},
+  {"dest": "kanazawa", "slug": "higashi-chaya", "title": "Higashi Chaya district, Kanazawa (3809893551).jpg", "artist": "Andrea Schaffer from Sydney, Australia", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:Higashi_Chaya_district%2C_Kanazawa_%283809893551%29.jpg"},
+  {"dest": "kanazawa", "slug": "omicho", "title": "Kanazawa Omicho Market, Japan (48876956676).jpg", "artist": "dconvertini", "license": "CC BY-SA 2.0", "source": "https://commons.wikimedia.org/wiki/File:Kanazawa_Omicho_Market%2C_Japan_%2848876956676%29.jpg"},
+  {"dest": "kanazawa", "slug": "21-museum", "title": "Inside the Swimming Pool, 21st Century Museum of Contemporary Art.jpg", "artist": "ajari from Japan", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:Inside_the_Swimming_Pool%2C_21st_Century_Museum_of_Contemporary_Art.jpg"},
+  {"dest": "kanazawa", "slug": "kanazawa-station", "title": "Tsuzumimon Gate in front of Kanazawa Station from inner side.jpg", "artist": "そらみみ", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Tsuzumimon_Gate_in_front_of_Kanazawa_Station_from_inner_side.jpg"},
+  {"dest": "kanazawa", "slug": "nagamachi", "title": "Nagamachi samurai district.jpg", "artist": "sergejf", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:Nagamachi_samurai_district.jpg"},
+  {"dest": "kanazawa", "slug": "kazuemachi", "title": "Kazue Machi Chaya District (119235745).jpeg", "artist": "Okochuke", "license": "CC BY-SA 3.0", "source": "https://commons.wikimedia.org/wiki/File:Kazue_Machi_Chaya_District_%28119235745%29.jpeg"},
+  {"dest": "kanazawa", "slug": "shirakawago", "title": "Shirakawa-go Full view.jpg", "artist": "MaedaAkihiko", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Shirakawa-go_Full_view.jpg"},
+  {"dest": "kanazawa", "slug": "toujinbo", "title": "Tojinbo cliffs, Fukui Prefecture; September 2019 (01).jpg", "artist": "雷太", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:Tojinbo_cliffs%2C_Fukui_Prefecture%3B_September_2019_%2801%29.jpg"},
+  {"dest": "kanazawa", "slug": "natadera", "title": "Natadera 6738.jpg", "artist": "Brakeet", "license": "CC0", "source": "https://commons.wikimedia.org/wiki/File:Natadera_6738.jpg"}
 ];
