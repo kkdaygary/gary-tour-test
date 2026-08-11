@@ -210,7 +210,6 @@
 
     var why = d.why.map(function (w) {
       return '<div class="why-card">'
-        + '<div class="ic">' + w.icon + '</div>'
         + '<h3>' + esc(w.title) + '</h3>'
         + '<p>' + esc(w.text) + '</p>'
         + '</div>';
@@ -283,9 +282,9 @@
         return '<ul>' + lis + '</ul>';
       };
       howto = '<div class="grid c2">'
-        + '<div class="howto-col first"><h3>🧭 第一次來，這樣玩不會錯</h3>'
+        + '<div class="howto-col first"><h3>第一次來，這樣玩不會錯</h3>'
         + col('first', x.howto.first) + '</div>'
-        + '<div class="howto-col deep"><h3>🔍 想玩深一點，像在地人</h3>'
+        + '<div class="howto-col deep"><h3>想玩深一點，像在地人</h3>'
         + col('deep', x.howto.deep) + '</div>'
         + '</div>';
     }
@@ -385,6 +384,7 @@
 
     return '<section class="panel" id="panel-' + d.id + '" role="tabpanel" style="--dest:' + d.accent + '">'
 
+      + (d.pick ? '<a class="pick-back" data-goto="recommend">← 回私房推薦</a>' : '')
       + hero
       + '<div class="dest-head">'
       + '<p class="intro">' + esc(d.intro) + '</p>'
@@ -486,10 +486,8 @@
     DESTINATIONS.map(function (d) {
       return { id: d.id, label: d.emoji + ' ' + d.name, accent: d.accent };
     })
-  ).concat([{ id: 'recommend', label: '✨ 私房推薦', accent: REC_ACCENT }])
-   .concat(PICK_LIST.map(function (d) {
-      return { id: d.id, label: '✨ ' + d.emoji + ' ' + d.name, accent: d.accent };
-   }));
+  ).concat([{ id: 'recommend', label: '✨ 私房推薦', accent: REC_ACCENT }]);
+  /* 5 個私房推薦景點不各佔頁籤，收攏在「✨ 私房推薦」tab 下，由 hub 卡片點進完整頁 */
 
   tabsEl.innerHTML = tabDefs.map(function (t) {
     return '<button role="tab" data-tab="' + t.id + '" aria-selected="false"'
@@ -504,15 +502,20 @@
       + d.emoji + ' ' + esc(d.name) + '</button>';
   }).join('');
 
+  var PICK_IDS = PICK_LIST.map(function (d) { return d.id; });
+
   function show(id, push) {
     var panel = document.getElementById('panel-' + id);
     if (!panel) { id = 'overview'; panel = document.getElementById('panel-overview'); }
+
+    /* 私房推薦的 5 個景點沒有自己的頁籤，高亮回「私房推薦」 */
+    var tabId = PICK_IDS.indexOf(id) !== -1 ? 'recommend' : id;
 
     Array.prototype.forEach.call(document.querySelectorAll('.panel'), function (p) {
       p.classList.toggle('is-active', p === panel);
     });
     Array.prototype.forEach.call(tabsEl.querySelectorAll('[data-tab]'), function (b) {
-      var on = b.getAttribute('data-tab') === id;
+      var on = b.getAttribute('data-tab') === tabId;
       b.setAttribute('aria-selected', on ? 'true' : 'false');
       if (on) b.scrollIntoView({ block: 'nearest', inline: 'center' });
     });
