@@ -640,6 +640,18 @@ tbody tr:hover { background: var(--paper-3); }
 .rec-card[data-goto] * { cursor: pointer; }
 .rec-more { color: var(--dest); font-weight: 700; font-size: .86rem; margin-top: 2px; }
 
+/* ── 私房推薦：返回連結 ─────────────────────────────── */
+.pick-back {
+  display: inline-block;
+  margin-bottom: 14px;
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--dest);
+  cursor: pointer;
+  text-decoration: none;
+}
+.pick-back:hover { text-decoration: underline; text-underline-offset: 3px; }
+
 /* ── 私房推薦頁面的緞帶 ─────────────────────────────── */
 .pick-ribbon {
   position: absolute;
