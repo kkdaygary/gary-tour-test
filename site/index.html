@@ -374,6 +374,7 @@
       ? '<div class="dest-hero">'
         + '<img src="' + heroUrl + '" alt="' + esc(d.name) + '" />'
         + '<div class="scrim"></div>'
+        + (d.pick ? '<span class="pick-ribbon">✨ 編輯私房推薦</span>' : '')
         + '<div class="big-emoji">' + d.emoji + '</div>'
         + '<div class="cap">'
         + '<div class="romaji">' + esc(d.romaji) + '</div>'
@@ -428,12 +429,12 @@
 
   function recommendPanel() {
     var cards = (typeof RECOMMEND !== 'undefined' ? RECOMMEND : []).map(function (r) {
-      var url = imgUrl('recommend', r.id, 900);
+      var url = imgUrl(r.id, r.id + '-hero', 900);
       var thumb = url ? '<img src="' + url + '" alt="' + esc(r.name) + '" loading="lazy" />' : '';
       var row = function (lbl, val) {
         return '<div class="rec-row"><span class="rl">' + lbl + '</span><span>' + esc(val) + '</span></div>';
       };
-      return '<article class="rec-card">'
+      return '<article class="rec-card" data-goto="' + r.id + '">'
         + '<div class="rec-ph">' + thumb
         + '<span class="rec-badge">' + r.emoji + ' ' + esc(r.name) + '</span>'
         + '<span class="rec-region">' + esc(r.region) + '</span></div>'
@@ -446,6 +447,7 @@
         + row('天數', r.days)
         + row('怎麼去', r.transport)
         + '<div class="rec-note"><span class="tag-new">最新</span>' + esc(r.heads) + '</div>'
+        + '<div class="rec-more">看完整介紹與 5 天 4 夜行程 →</div>'
         + '</div></article>';
     }).join('');
 
@@ -465,7 +467,8 @@
       + '<div class="section">'
       + '<h2>編輯私房推薦</h2>'
       + '<p class="data-note">這一區不是投票名單，而是我以旅遊角度補的「沒被提名、卻值得單獨成行」五個地點，'
-      + '刻意跨開關東、關西、沖繩、中國地方與四國，把現有七地沒代表到的區域與主題補齊。'
+      + '刻意跨開東北、山陰、紀伊半島、中國地方與四國，把現有七地沒代表到的區域與主題補齊。'
+      + '每個都有跟其他地點一樣完整的頁面——<strong>點任一張卡（或上方頁籤）看完整介紹與 5 天 4 夜行程</strong>。'
       + '資訊查證於 2026 年 8 月，活動與票價以官方最新公告為準。</p>'
       + '<div class="rec-grid">' + cards + '</div>'
       + credits
@@ -477,18 +480,24 @@
   var panelsEl = document.getElementById('panels');
   var heroEl = document.getElementById('heroPills');
 
+  var PICK_LIST = (typeof PICKS !== 'undefined' ? PICKS : []);
+
   var tabDefs = [{ id: 'overview', label: '總覽', accent: '#C0392B' }].concat(
     DESTINATIONS.map(function (d) {
       return { id: d.id, label: d.emoji + ' ' + d.name, accent: d.accent };
     })
-  ).concat([{ id: 'recommend', label: '✨ 私房推薦', accent: REC_ACCENT }]);
+  ).concat([{ id: 'recommend', label: '✨ 私房推薦', accent: REC_ACCENT }])
+   .concat(PICK_LIST.map(function (d) {
+      return { id: d.id, label: '✨ ' + d.emoji + ' ' + d.name, accent: d.accent };
+   }));
 
   tabsEl.innerHTML = tabDefs.map(function (t) {
     return '<button role="tab" data-tab="' + t.id + '" aria-selected="false"'
       + ' style="--tab-accent:' + t.accent + '">' + t.label + '</button>';
   }).join('') + '<button class="theme-toggle" id="themeToggle" aria-label="切換深淺色">◐</button>';
 
-  panelsEl.innerHTML = overviewPanel() + DESTINATIONS.map(destPanel).join('') + recommendPanel();
+  panelsEl.innerHTML = overviewPanel() + DESTINATIONS.map(destPanel).join('')
+    + recommendPanel() + PICK_LIST.map(destPanel).join('');
 
   heroEl.innerHTML = DESTINATIONS.map(function (d) {
     return '<button class="hero-pill" data-goto="' + d.id + '">'

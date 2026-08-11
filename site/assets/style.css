@@ -635,6 +635,23 @@ tbody tr:hover { background: var(--paper-3); }
   padding: 12px 14px; line-height: 1.72; margin-top: 2px;
 }
 .rec-note .tag-new { margin: 0 6px 0 0; }
+.rec-card[data-goto] { cursor: pointer; transition: transform .15s, box-shadow .15s; }
+.rec-card[data-goto]:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.rec-card[data-goto] * { cursor: pointer; }
+.rec-more { color: var(--dest); font-weight: 700; font-size: .86rem; margin-top: 2px; }
+
+/* ── 私房推薦頁面的緞帶 ─────────────────────────────── */
+.pick-ribbon {
+  position: absolute;
+  left: 0; top: 16px;
+  background: var(--dest);
+  color: #fff;
+  font-size: .74rem; font-weight: 800; letter-spacing: .08em;
+  padding: 5px 14px 5px 12px;
+  border-radius: 0 999px 999px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  z-index: 2;
+}
 
 /* ── 頁尾 ───────────────────────────────────────────── */
 footer {
