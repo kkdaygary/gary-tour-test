@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>日本六選一 · 5天4夜行程提案</title>
-<meta name="description" content="大阪、福岡、仙台、神戶、茨城、札幌、金澤——七個地點的特色、必吃、必玩，各附一份 5 天 4 夜行程。" />
+<title>福岡 5天4夜 · 3/9–3/13 行程</title>
+<meta name="description" content="福岡 5 天 4 夜（3/9–3/13）完整行程：博多屋台、太宰府柳川、由布院溫泉、別府地獄，附必吃清單、必玩景點與實用提醒。" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23FBF9F5'/%3E%3Ccircle cx='50' cy='50' r='26' fill='%23C0392B'/%3E%3C/svg%3E" />
 <link rel="stylesheet" href="assets/style.css" />
 </head>
@@ -12,19 +12,19 @@
 
 <header class="hero">
   <div class="wrap">
-    <div class="kicker">JAPAN · 5 DAYS 4 NIGHTS</div>
-    <h1>七個地點，七份 <span class="sun">5天4夜</span> 提案</h1>
+    <div class="kicker">FUKUOKA · 5 DAYS 4 NIGHTS · 2027.3.9 – 3.13</div>
+    <h1>福岡 <span class="sun">5天4夜</span>，3/9–3/13</h1>
     <p class="lede">
-      大阪、福岡、仙台、神戶、茨城、札幌、金澤——這七個地點從北海道橫跨到北陸與九州，
-      5天4夜實際上只夠好好玩透一個。所以我幫每個地點各寫了一份完整行程：
-      它憑什麼值得去、五天怎麼排、必吃什麼、必玩哪裡，還有第一次去要注意的事。
+      用福岡當基地的五天：第一晚就坐進中洲的屋台，隔天太宰府看梅花尾聲、柳川搭船，
+      中段進山住一晚由布院溫泉、順遊別府地獄，最後一天天神採買再五分鐘到機場。
+      必吃什麼、必玩哪裡、三月上旬要注意什麼，都在下面。
     </p>
     <div class="hero-pills" id="heroPills"></div>
   </div>
 </header>
 
-<nav class="nav" aria-label="地點導覽">
-  <div class="nav-inner" id="tabs" role="tablist"></div>
+<nav class="nav" aria-label="工具列">
+  <div class="nav-inner" id="tabs"></div>
 </nav>
 
 <main class="wrap" id="panels"></main>
@@ -33,10 +33,10 @@
   <div class="wrap">
     <p>
       內容為旅遊規劃建議，行程節奏與店家為個人推薦。
-      營業時間、票價、纜車與道路的季節性封閉（尤其藏王ハイライン、摩耶纜車休日、由布院之森訂位）
-      都可能變動，出發前請務必再確認官方資訊。
+      營業時間、票價與列車時刻（尤其由布院之森訂位、太宰府梅花花況）都可能變動，
+      出發前請務必再確認官方資訊。
     </p>
-    <p>季節限定的看點已標在各地點的「實用提醒」裡，挑月份時記得回頭看一下。</p>
+    <p>三月上旬限定的看點已標在「季節限定」與「實用提醒」裡，訂票前記得回頭看一下。</p>
   </div>
 </footer>
 
@@ -77,131 +77,6 @@
     return (typeof EXTRA !== 'undefined' && EXTRA[id]) ? EXTRA[id] : {};
   }
 
-  function findBy(key, val) {
-    for (var i = 0; i < DESTINATIONS.length; i++) {
-      if (DESTINATIONS[i][key] === val) return DESTINATIONS[i];
-    }
-    return null;
-  }
-
-  var accentOf = function (id) {
-    var d = findBy('id', id);
-    return d ? d.accent : '#C0392B';
-  };
-
-  var emojiOf = function (id) {
-    var d = findBy('id', id);
-    return d ? d.emoji : '📍';
-  };
-
-  var idOfName = function (name) {
-    var d = findBy('name', name);
-    return d ? d.id : '';
-  };
-
-  /* ── 總覽面板 ─────────────────────────────────────── */
-  function overviewPanel() {
-    var rows = OVERVIEW.map(function (o) {
-      return '<tr style="--row-accent:' + accentOf(o.id) + '">'
-        + '<td><button class="dest-link" data-goto="' + o.id + '">'
-        + emojiOf(o.id) + ' ' + esc(o.name) + '</button></td>'
-        + '<td>' + esc(o.region) + '</td>'
-        + '<td>' + esc(o.airport) + '</td>'
-        + '<td>' + esc(o.flight) + '</td>'
-        + '<td>' + esc(o.season) + '</td>'
-        + '<td>' + esc(o.good) + '</td>'
-        + '<td class="stars">'
-        + new Array(o.level + 1).join('★') + new Array(4 - o.level).join('☆')
-        + '<br><span style="font-size:.78rem">' + esc(o.levelText) + '</span></td>'
-        + '</tr>';
-    }).join('');
-
-    var picks = PICK_GUIDE.map(function (p) {
-      return '<div class="pick" style="border-left-color:' + accentOf(idOfName(p.a)) + '">'
-        + '<div class="q">' + esc(p.q) + '</div>'
-        + '<div class="a">' + emojiOf(idOfName(p.a)) + ' ' + esc(p.a) + '</div>'
-        + '<p class="why">' + esc(p.why) + '</p>'
-        + '</div>';
-    }).join('');
-
-    var cards = DESTINATIONS.map(function (d) {
-      var x = extraOf(d.id);
-      var url = x.hero ? imgUrl(d.id, x.hero, 700) : '';
-      var thumb = url
-        ? '<img src="' + url + '" alt="' + esc(d.name) + '" loading="lazy" />'
-        : '';
-      var ov = null;
-      for (var oi = 0; oi < OVERVIEW.length; oi++) {
-        if (OVERVIEW[oi].id === d.id) { ov = OVERVIEW[oi]; break; }
-      }
-      var meta = ov
-        ? '<div class="mt"><span>' + esc(ov.region) + '</span><span>' + esc(ov.good) + '</span></div>'
-        : '';
-      return '<button class="dest-card" data-goto="' + d.id + '" style="--dest:' + d.accent + '">'
-        + '<div class="thumb">' + thumb
-        + '<span class="badge">' + d.emoji + ' ' + esc(d.name) + '</span></div>'
-        + '<div class="body">'
-        + '<div class="tl">' + esc(d.tagline) + '</div>'
-        + meta
-        + '</div></button>';
-    }).join('');
-
-    return '<section class="panel" id="panel-overview" role="tabpanel">'
-
-      + '<div class="section">'
-      + '<h2>七個地點</h2>'
-      + '<div class="dest-cards">' + cards + '</div>'
-      + '</div>'
-
-      + '<div class="section">'
-      + '<h2>先講一件重要的事</h2>'
-      + '<div class="note">'
-      + '<p><strong>這七個地點沒辦法在同一趟 5天4夜裡玩完。</strong>'
-      + '札幌在北海道、仙台在東北、茨城在關東、大阪跟神戶在關西、金澤在北陸、福岡在九州，'
-      + '光是南北兩端的移動就要耗掉一整天。</p>'
-      + '<p>所以這份網站的用法是：<strong>先用下面的比較表跟「怎麼選」決定一個地點</strong>，'
-      + '再點上方的頁籤看那個地點完整的五天怎麼走。'
-      + '大阪與神戶是唯一可以合併的一組（JR 只要 21 分鐘），神戶那份行程裡也已經考慮到這點。</p>'
-      + '</div>'
-      + '</div>'
-
-      + '<div class="section">'
-      + '<h2>七個地點比一比</h2>'
-      + '<div class="table-scroll"><table>'
-      + '<thead><tr>'
-      + '<th>地點</th><th>區域</th><th>進出機場</th><th>從台灣</th>'
-      + '<th>最佳季節</th><th>適合</th><th>上手度</th>'
-      + '</tr></thead><tbody>' + rows + '</tbody>'
-      + '</table></div>'
-      + '</div>'
-
-      + '<div class="section">'
-      + '<h2>那我該選哪個？</h2>'
-      + '<div class="grid c2">' + picks + '</div>'
-      + '</div>'
-
-      + '<div class="section">'
-      + '<h2>如果是團體投票，我的排序</h2>'
-      + '<div class="note">'
-      + '<p><strong>1. 大阪</strong>——第一次去日本的最穩解。吃、逛、古城、京都奈良全包，'
-      + '交通好懂，走錯路也救得回來，同行的人不管想幹嘛都有事做。</p>'
-      + '<p><strong>2. 札幌</strong>——如果時間落在二月或六到八月，它的體驗差異最大：'
-      + '台灣沒有的雪，跟台灣沒有的涼夏。缺點是機票最貴。</p>'
-      + '<p><strong>3. 福岡</strong>——CP 值第一。機場離市區五分鐘，物價低一截，'
-      + '而且可以順手把由布院溫泉排進去。</p>'
-      + '<p><strong>4. 金澤</strong>——想要京都的古都氛圍卻怕人潮的話最合適。'
-      + '兼六園、茶屋街、螃蟹與金箔，2024 年新幹線通車後東京直達更方便（牽涉能登的部分要先查復原狀況）。</p>'
-      + '<p><strong>5. 神戶</strong>——想輕鬆一點、走文青路線，或已經去過大阪的話選這個。</p>'
-      + '<p><strong>6. 仙台</strong>——受不了人潮、喜歡溫泉與自然的人會愛。'
-      + '但直飛班次少，通常要從東京轉新幹線。</p>'
-      + '<p><strong>7. 茨城</strong>——最需要條件：要有國際駕照跟願意開車的人，'
-      + '而且日期要卡在花季。條件對了它很棒，條件不對就會很空。</p>'
-      + '</div>'
-      + '</div>'
-
-      + '</section>';
-  }
-
   /* ── 地點面板 ─────────────────────────────────────── */
   function destPanel(d) {
     var facts = Object.keys(d.facts).map(function (k) {
@@ -235,7 +110,7 @@
         foot += '</div>';
       }
 
-      return '<article class="day">'
+      return '<article class="day" id="day-' + day.day + '">'
         + '<div class="day-head">'
         + '<span class="day-num">DAY ' + day.day + '</span>'
         + '<h3>' + esc(day.title) + '</h3>'
@@ -336,8 +211,8 @@
           + '<h3>' + esc(s.title) + '</h3>'
           + '<p>' + esc(s.text) + '</p></div>';
       }).join('');
-      seasonal = '<div class="section"><h2>季節限定</h2>'
-        + '<p class="data-note">資訊查證於 2026 年 7 月；活動日期與票價以官方最新公告為準。</p>'
+      seasonal = '<div class="section"><h2>3 月上旬限定看點</h2>'
+        + '<p class="data-note">花況與活動日期以官方最新公告為準，出發前再確認一次。</p>'
         + '<div class="grid c2">' + sc + '</div></div>';
     }
 
@@ -373,7 +248,6 @@
       ? '<div class="dest-hero">'
         + '<img src="' + heroUrl + '" alt="' + esc(d.name) + '" />'
         + '<div class="scrim"></div>'
-        + (d.pick ? '<span class="pick-ribbon">✨ 編輯私房推薦</span>' : '')
         + '<div class="big-emoji">' + d.emoji + '</div>'
         + '<div class="cap">'
         + '<div class="romaji">' + esc(d.romaji) + '</div>'
@@ -382,9 +256,8 @@
         + '</div></div>'
       : '';
 
-    return '<section class="panel" id="panel-' + d.id + '" role="tabpanel" style="--dest:' + d.accent + '">'
+    return '<section class="panel is-active" id="panel-' + d.id + '" role="main" style="--dest:' + d.accent + '">'
 
-      + (d.pick ? '<a class="pick-back" data-goto="recommend">← 回私房推薦</a>' : '')
       + hero
       + '<div class="dest-head">'
       + '<p class="intro">' + esc(d.intro) + '</p>'
@@ -392,7 +265,7 @@
 
       + '<dl class="facts">' + facts + '</dl>'
 
-      + '<div class="section"><h2>為什麼值得去</h2>'
+      + '<div class="section"><h2>為什麼選福岡</h2>'
       + '<div class="grid c2">' + why + '</div></div>'
 
       + seasonal
@@ -400,7 +273,7 @@
 
       + (howto ? '<div class="section"><h2>怎麼玩：第一次 vs 深度</h2>' + howto + '</div>' : '')
 
-      + '<div class="section"><h2>5天4夜怎麼走</h2>'
+      + '<div class="section" id="itinerary"><h2>5天4夜怎麼走（3/9–3/13）</h2>'
       + '<div class="days">' + days + '</div></div>'
 
       + '<div class="section"><h2>必吃</h2>'
@@ -424,118 +297,36 @@
       + '</section>';
   }
 
-  /* ── 編輯私房推薦面板 ─────────────────────────────── */
-  var REC_ACCENT = '#3E7C82';
-
-  function recommendPanel() {
-    var cards = (typeof RECOMMEND !== 'undefined' ? RECOMMEND : []).map(function (r) {
-      var url = imgUrl(r.id, r.id + '-hero', 900);
-      var thumb = url ? '<img src="' + url + '" alt="' + esc(r.name) + '" loading="lazy" />' : '';
-      var row = function (lbl, val) {
-        return '<div class="rec-row"><span class="rl">' + lbl + '</span><span>' + esc(val) + '</span></div>';
-      };
-      return '<article class="rec-card" data-goto="' + r.id + '">'
-        + '<div class="rec-ph">' + thumb
-        + '<span class="rec-badge">' + r.emoji + ' ' + esc(r.name) + '</span>'
-        + '<span class="rec-region">' + esc(r.region) + '</span></div>'
-        + '<div class="rec-body">'
-        + '<div class="rec-tag">' + esc(r.tagline) + '</div>'
-        + '<p class="rec-why">' + esc(r.why) + '</p>'
-        + row('亮點', r.highlights.join('、'))
-        + row('必吃', r.eats.join('、'))
-        + row('季節', r.season)
-        + row('天數', r.days)
-        + row('怎麼去', r.transport)
-        + '<div class="rec-note"><span class="tag-new">最新</span>' + esc(r.heads) + '</div>'
-        + '<div class="rec-more">看完整介紹與 5 天 4 夜行程 →</div>'
-        + '</div></article>';
-    }).join('');
-
-    var recCredits = (typeof CREDITS !== 'undefined' ? CREDITS : [])
-      .filter(function (c) { return c.dest === 'recommend'; })
-      .map(function (c) {
-        return '<li>' + esc(c.title) + ' — ' + esc(c.artist)
-          + '（' + esc(c.license) + '）· '
-          + '<a href="' + esc(c.source) + '" target="_blank" rel="noopener">來源</a></li>';
-      }).join('');
-    var credits = recCredits
-      ? '<details class="credits"><summary>照片版權與授權（Wikimedia Commons）</summary><ul>'
-        + recCredits + '</ul></details>'
-      : '';
-
-    return '<section class="panel" id="panel-recommend" role="tabpanel" style="--dest:' + REC_ACCENT + '">'
-      + '<div class="section">'
-      + '<h2>編輯私房推薦</h2>'
-      + '<p class="data-note">這一區不是投票名單，而是我以旅遊角度補的「沒被提名、卻值得單獨成行」五個地點，'
-      + '刻意跨開東北、山陰、紀伊半島、中國地方與四國，把現有七地沒代表到的區域與主題補齊。'
-      + '每個都有跟其他地點一樣完整的頁面——<strong>點任一張卡（或上方頁籤）看完整介紹與 5 天 4 夜行程</strong>。'
-      + '資訊查證於 2026 年 8 月，活動與票價以官方最新公告為準。</p>'
-      + '<div class="rec-grid">' + cards + '</div>'
-      + credits
-      + '</div></section>';
-  }
-
   /* ── 組裝 ─────────────────────────────────────────── */
+  var FUKUOKA = DESTINATIONS[0];
   var tabsEl = document.getElementById('tabs');
   var panelsEl = document.getElementById('panels');
   var heroEl = document.getElementById('heroPills');
 
-  var PICK_LIST = (typeof PICKS !== 'undefined' ? PICKS : []);
+  tabsEl.innerHTML = '<button role="tab" data-tab="fukuoka" aria-selected="true"'
+    + ' style="--tab-accent:' + FUKUOKA.accent + '">' + FUKUOKA.emoji + ' 福岡 5天4夜 · 3/9–3/13</button>'
+    + '<button class="theme-toggle" id="themeToggle" aria-label="切換深淺色">◐</button>';
 
-  var tabDefs = [{ id: 'overview', label: '總覽', accent: '#C0392B' }].concat(
-    DESTINATIONS.map(function (d) {
-      return { id: d.id, label: d.emoji + ' ' + d.name, accent: d.accent };
-    })
-  ).concat([{ id: 'recommend', label: '✨ 私房推薦', accent: REC_ACCENT }]);
-  /* 5 個私房推薦景點不各佔頁籤，收攏在「✨ 私房推薦」tab 下，由 hub 卡片點進完整頁 */
+  panelsEl.innerHTML = destPanel(FUKUOKA);
 
-  tabsEl.innerHTML = tabDefs.map(function (t) {
-    return '<button role="tab" data-tab="' + t.id + '" aria-selected="false"'
-      + ' style="--tab-accent:' + t.accent + '">' + t.label + '</button>';
-  }).join('') + '<button class="theme-toggle" id="themeToggle" aria-label="切換深淺色">◐</button>';
-
-  panelsEl.innerHTML = overviewPanel() + DESTINATIONS.map(destPanel).join('')
-    + recommendPanel() + PICK_LIST.map(destPanel).join('');
-
-  heroEl.innerHTML = DESTINATIONS.map(function (d) {
-    return '<button class="hero-pill" data-goto="' + d.id + '">'
-      + d.emoji + ' ' + esc(d.name) + '</button>';
+  /* 英雄區的每日小膠囊：點了捲到那一天 */
+  var DAY_PILLS = [
+    { day: 1, label: '3/9 屋台初夜' },
+    { day: 2, label: '3/10 太宰府・柳川' },
+    { day: 3, label: '3/11 由布院溫泉' },
+    { day: 4, label: '3/12 別府地獄' },
+    { day: 5, label: '3/13 採買返程' },
+  ];
+  heroEl.innerHTML = DAY_PILLS.map(function (p) {
+    return '<button class="hero-pill" data-day="' + p.day + '">' + esc(p.label) + '</button>';
   }).join('');
 
-  var PICK_IDS = PICK_LIST.map(function (d) { return d.id; });
-
-  function show(id, push) {
-    var panel = document.getElementById('panel-' + id);
-    if (!panel) { id = 'overview'; panel = document.getElementById('panel-overview'); }
-
-    /* 私房推薦的 5 個景點沒有自己的頁籤，高亮回「私房推薦」 */
-    var tabId = PICK_IDS.indexOf(id) !== -1 ? 'recommend' : id;
-
-    Array.prototype.forEach.call(document.querySelectorAll('.panel'), function (p) {
-      p.classList.toggle('is-active', p === panel);
-    });
-    Array.prototype.forEach.call(tabsEl.querySelectorAll('[data-tab]'), function (b) {
-      var on = b.getAttribute('data-tab') === tabId;
-      b.setAttribute('aria-selected', on ? 'true' : 'false');
-      if (on) b.scrollIntoView({ block: 'nearest', inline: 'center' });
-    });
-
-    if (push && location.hash.slice(1) !== id) {
-      history.pushState(null, '', '#' + id);
-    }
-    window.scrollTo({ top: 0 });
-  }
-
   document.addEventListener('click', function (e) {
-    var tab = e.target.closest('[data-tab]');
-    if (tab) { show(tab.getAttribute('data-tab'), true); return; }
-
-    var go = e.target.closest('[data-goto]');
-    if (go) { show(go.getAttribute('data-goto'), true); return; }
-  });
-
-  window.addEventListener('hashchange', function () {
-    show(location.hash.slice(1) || 'overview', false);
+    var pill = e.target.closest('[data-day]');
+    if (pill) {
+      var el = document.getElementById('day-' + pill.getAttribute('data-day'));
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   });
 
   /* 深淺色切換 */
@@ -562,8 +353,6 @@
   toTop.addEventListener('click', function () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-
-  show(location.hash.slice(1) || 'overview', false);
 })();
 </script>
 </body>
