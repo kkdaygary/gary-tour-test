@@ -2,45 +2,38 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>福岡 5天4夜 · 3/9–3/13 行程</title>
-<meta name="description" content="福岡 5 天 4 夜（3/9–3/13）完整行程：博多屋台、太宰府柳川、由布院溫泉、別府地獄，附必吃清單、必玩景點與實用提醒。" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23FBF9F5'/%3E%3Ccircle cx='50' cy='50' r='26' fill='%23C0392B'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="assets/style.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>福岡五日 — 5天4夜行程誌（2027/3/9–3/13）</title>
+<meta name="description" content="福岡 5 天 4 夜行程誌（2027/3/9–3/13）：博多屋台、太宰府柳川、由布院溫泉、別府地獄，附必吃清單、景點圖輯與實用提醒。" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23F7F3EA'/%3E%3Ccircle cx='50' cy='50' r='27' fill='%23B9361F'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="assets/style.css?v=20261016" />
 </head>
 <body>
 
-<header class="hero">
-  <div class="wrap">
-    <div class="kicker">FUKUOKA · 5 DAYS 4 NIGHTS · 2027.3.9 – 3.13</div>
-    <h1>福岡 <span class="sun">5天4夜</span>，3/9–3/13</h1>
-    <p class="lede">
-      用福岡當基地的五天：第一晚就坐進中洲的屋台，隔天太宰府看梅花尾聲、柳川搭船，
-      中段進山住一晚由布院溫泉、順遊別府地獄，最後一天天神採買再五分鐘到機場。
-      必吃什麼、必玩哪裡、三月上旬要注意什麼，都在下面。
-    </p>
-    <div class="hero-pills" id="heroPills"></div>
-  </div>
+<header class="mast reveal" style="--i:0">
+  <p class="mast-line mono">五天四夜行程誌 · 第一號 · 2027年3月9日–13日</p>
+  <h1 class="mast-name">福岡五日<span class="latin">FUKUOKA ALMANAC</span></h1>
+  <nav class="mast-nav" aria-label="章節導覽">
+    <ul>
+      <li><a href="#itinerary">行程</a></li>
+      <li><a href="#news">情報</a></li>
+      <li><a href="#eats">必吃</a></li>
+      <li><a href="#plays">景點</a></li>
+      <li><a href="#tips">提醒</a></li>
+    </ul>
+  </nav>
+  <hr class="mast-rule" aria-hidden="true" />
+  <button class="theme-toggle" id="themeToggle" aria-label="切換深淺色">◐</button>
 </header>
 
-<nav class="nav" aria-label="工具列">
-  <div class="nav-inner" id="tabs"></div>
-</nav>
+<main class="wrap" id="main"></main>
 
-<main class="wrap" id="panels"></main>
-
-<footer>
-  <div class="wrap">
-    <p>
-      內容為旅遊規劃建議，行程節奏與店家為個人推薦。
-      營業時間、票價與列車時刻（尤其由布院之森訂位、太宰府梅花花況）都可能變動，
-      出發前請務必再確認官方資訊。
-    </p>
-    <p>三月上旬限定的看點已標在「季節限定」與「實用提醒」裡，訂票前記得回頭看一下。</p>
-  </div>
+<footer class="wrap">
+  <div class="colophon" id="colophon"></div>
 </footer>
-
-<button class="to-top" id="toTop" aria-label="回到頂端">↑</button>
 
 <script src="assets/data.js"></script>
 <script src="assets/credits.js"></script>
@@ -49,287 +42,221 @@
 (function () {
   'use strict';
 
+  var D = DESTINATIONS[0];
+  var X = (typeof EXTRA !== 'undefined' && EXTRA[D.id]) ? EXTRA[D.id] : {};
+
   var esc = function (s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   };
 
-  /* ── 照片：用 Wikimedia Special:FilePath 組出公開連結 ── */
+  /* Wikimedia 圖片 */
   var CREDIT_INDEX = {};
   (typeof CREDITS !== 'undefined' ? CREDITS : []).forEach(function (c) {
-    CREDIT_INDEX[c.dest + '/' + c.slug] = c;
+    CREDIT_INDEX[c.slug] = c;
   });
-
-  function creditBySlug(dest, slug) {
-    return CREDIT_INDEX[dest + '/' + slug] || null;
-  }
-
-  // 從 credits.js 的 source（File: 頁）轉成可直接 <img> 的縮圖網址
-  function imgUrl(dest, slug, width) {
-    var c = creditBySlug(dest, slug);
+  function imgUrl(slug, width) {
+    var c = CREDIT_INDEX[slug];
     if (!c || !c.source) return '';
     var file = c.source.replace('https://commons.wikimedia.org/wiki/File:', '');
     return 'https://commons.wikimedia.org/wiki/Special:FilePath/' + file + '?width=' + (width || 1200);
   }
 
-  function extraOf(id) {
-    return (typeof EXTRA !== 'undefined' && EXTRA[id]) ? EXTRA[id] : {};
+  /* 每日短標與照片 */
+  var DAY_META = [
+    { short: '屋台初夜', slug: 'yatai', cap: '中洲・那珂川沿岸的屋台街' },
+    { short: '太宰府・柳川', slug: 'yanagawa', cap: '柳川・城下町水道的どんこ舟' },
+    { short: '由布院溫泉', slug: 'yufuin', cap: '由布院・金鱗湖畔' },
+    { short: '別府地獄', slug: 'beppu', cap: '別府・海地獄的鈷藍' },
+    { short: '採買返程', slug: 'ohori-park', cap: '福岡・大濠公園' },
+  ];
+
+  /* 標題拆日期：「3/9（二）抵達・博多…」 */
+  function splitTitle(t) {
+    var m = t.match(/^(\d+\/\d+)（(.)）(.*)$/);
+    return m ? { date: m[1], wd: m[2], rest: m[3] } : { date: '', wd: '', rest: t };
   }
 
-  /* ── 地點面板 ─────────────────────────────────────── */
-  function destPanel(d) {
-    var facts = Object.keys(d.facts).map(function (k) {
-      return '<div class="row"><dt>' + esc(k) + '</dt><dd>' + esc(d.facts[k]) + '</dd></div>';
+  /* ── 開篇 ── */
+  function opening() {
+    var facts = Object.keys(D.facts).map(function (k) {
+      return '<tr><th scope="row">' + esc(k) + '</th><td>' + esc(D.facts[k]) + '</td></tr>';
     }).join('');
 
-    var why = d.why.map(function (w) {
-      return '<div class="why-card">'
-        + '<h3>' + esc(w.title) + '</h3>'
-        + '<p>' + esc(w.text) + '</p>'
-        + '</div>';
+    var index = D.itinerary.map(function (day, i) {
+      var t = splitTitle(day.title);
+      return '<a href="#day-' + day.day + '">'
+        + '<span class="no">0' + day.day + ' · ' + esc(t.date) + ' 週' + esc(t.wd) + '</span>'
+        + '<span>' + esc(DAY_META[i].short) + '</span>'
+        + '<span class="arrow" aria-hidden="true">→</span></a>';
     }).join('');
 
-    var days = d.itinerary.map(function (day) {
+    return '<figure class="cover reveal" style="--i:1">'
+      + '<img src="' + imgUrl('fukuoka-hero', 1600) + '" alt="中洲屋台街夜景" fetchpriority="high" />'
+      + '<figcaption><span>封面 · 中洲屋台街，日落後開張</span><span class="mono">HAKATA, FUKUOKA</span></figcaption>'
+      + '</figure>'
+
+      + '<div class="opening reveal" style="--i:2">'
+      + '<div>'
+      + '<p class="opening-statement">落地五分鐘，吃第一碗拉麵。</p>'
+      + '<p class="opening-lede">' + esc(D.intro) + '</p>'
+      + '<nav class="day-index" aria-label="每日行程索引">' + index + '</nav>'
+      + '</div>'
+      + '<table class="spec"><caption class="visually-hidden" style="display:none">旅行基本資料</caption>' + facts + '</table>'
+      + '</div>';
+  }
+
+  /* ── F4 · 行程 ── */
+  function itinerary() {
+    var stages = D.itinerary.map(function (day, i) {
+      var t = splitTitle(day.title);
+      var meta = DAY_META[i];
+
       var blocks = day.blocks.map(function (b) {
-        return '<div class="blk">'
-          + '<div class="when">' + esc(b.when) + '</div>'
-          + '<div class="what">' + esc(b.text) + '</div>'
-          + '</div>';
+        return '<div class="blk"><div class="when">' + esc(b.when) + '</div>'
+          + '<div class="what">' + esc(b.text) + '</div></div>';
       }).join('');
 
       var foot = '';
       if (day.stay || day.tip) {
-        foot += '<div class="day-foot">';
-        if (day.stay) {
-          foot += '<div class="meta"><span class="lbl">住宿</span><span>' + esc(day.stay) + '</span></div>';
-        }
-        if (day.tip) {
-          foot += '<div class="meta tip"><span class="lbl">小提醒</span><span>' + esc(day.tip) + '</span></div>';
-        }
-        foot += '</div>';
+        foot = '<div class="stage-foot">'
+          + (day.stay ? '<p><span class="lbl">住宿</span>' + esc(day.stay) + '</p>' : '')
+          + (day.tip ? '<p><span class="lbl">小提醒</span>' + esc(day.tip) + '</p>' : '')
+          + '</div>';
       }
 
-      return '<article class="day" id="day-' + day.day + '">'
-        + '<div class="day-head">'
-        + '<span class="day-num">DAY ' + day.day + '</span>'
-        + '<h3>' + esc(day.title) + '</h3>'
-        + '</div>'
-        + '<div class="day-body">' + blocks + foot + '</div>'
+      var photo = imgUrl(meta.slug, 900);
+      var fig = photo
+        ? '<figure class="stage-photo"><img src="' + photo + '" alt="' + esc(meta.cap) + '" loading="lazy" />'
+          + '<figcaption>' + esc(meta.cap) + '</figcaption></figure>'
+        : '';
+
+      return '<article class="stage" id="day-' + day.day + '">'
+        + '<header class="stage-head">'
+        + '<p class="stage-no">DAY 0' + day.day + ' — ' + esc(t.date) + ' 週' + esc(t.wd) + '</p>'
+        + '<h3 class="stage-title">' + esc(t.rest) + '</h3>'
+        + '</header>'
+        + '<div class="stage-blocks">' + blocks + '</div>'
+        + fig
+        + foot
         + '</article>';
     }).join('');
 
-    var eats = d.eats.map(function (e) {
-      return '<div class="eat">'
-        + '<div class="top"><span class="nm">' + esc(e.name) + '</span>'
-        + '<span class="jp">' + esc(e.jp) + '</span></div>'
-        + '<p>' + esc(e.text) + '</p>'
-        + '<div class="where">' + esc(e.where) + '</div>'
-        + '</div>';
-    }).join('');
-
-    var x = extraOf(d.id);
-    var playImg = x.playImg || {};
-    var usedSlugs = {};
-
-    var plays = d.plays.map(function (p) {
-      var slug = playImg[p.name];
-      var ph;
-      if (slug) {
-        usedSlugs[slug] = true;
-        ph = '<div class="ph"><img src="' + imgUrl(d.id, slug, 640)
-          + '" alt="' + esc(p.name) + '" loading="lazy" /></div>';
-      } else {
-        ph = '<div class="ph no-img">' + d.emoji + '</div>';
-      }
-      return '<figure class="play-card">' + ph
-        + '<figcaption><div class="nm">' + esc(p.name) + '</div>'
-        + '<p class="ds">' + esc(p.text) + '</p></figcaption></figure>';
-    }).join('');
-
-    /* 怎麼玩：第一次 vs 深度 */
-    var howto = '';
-    if (x.howto) {
-      var col = function (title, items) {
-        var lis = (items || []).map(function (i) {
-          return '<li><span><strong>' + esc(i.t) + '</strong>' + esc(i.d) + '</span></li>';
-        }).join('');
-        return '<ul>' + lis + '</ul>';
-      };
-      howto = '<div class="grid c2">'
-        + '<div class="howto-col first"><h3>第一次來，這樣玩不會錯</h3>'
-        + col('first', x.howto.first) + '</div>'
-        + '<div class="howto-col deep"><h3>想玩深一點，像在地人</h3>'
-        + col('deep', x.howto.deep) + '</div>'
-        + '</div>';
-    }
-
-    /* 喝（沿用必吃卡片樣式） */
-    var drinks = (x.drinks || []).map(function (e) {
-      return '<div class="eat">'
-        + '<div class="top"><span class="nm">' + esc(e.name) + '</span>'
-        + '<span class="jp">' + esc(e.jp) + '</span></div>'
-        + '<p>' + esc(e.text) + '</p>'
-        + '<div class="where">' + esc(e.where) + '</div>'
-        + '</div>';
-    }).join('');
-
-    /* 伴手禮 */
-    var souvenirs = (x.souvenirs || []).map(function (e) {
-      return '<div class="eat">'
-        + '<div class="top"><span class="nm">' + esc(e.name) + '</span>'
-        + '<span class="jp">' + esc(e.jp) + '</span></div>'
-        + '<p>' + esc(e.text) + '</p>'
-        + '<div class="where">' + esc(e.where) + '</div>'
-        + '</div>';
-    }).join('');
-
-    var tips = d.tips.map(function (t) {
-      return '<li><span>' + esc(t) + '</span></li>';
-    }).join('');
-
-    /* 照片版權（本頁用到的圖） */
-    if (x.hero) usedSlugs[x.hero] = true;
-    var creditItems = Object.keys(usedSlugs).map(function (slug) {
-      return creditBySlug(d.id, slug);
-    }).filter(Boolean).map(function (c) {
-      return '<li>' + esc(c.title) + ' — ' + esc(c.artist)
-        + '（' + esc(c.license) + '）· '
-        + '<a href="' + esc(c.source) + '" target="_blank" rel="noopener">來源</a></li>';
-    }).join('');
-    var credits = creditItems
-      ? '<details class="credits"><summary>照片版權與授權（Wikimedia Commons）</summary><ul>'
-        + creditItems + '</ul></details>'
-      : '';
-
-    /* 季節限定 */
-    var seasonal = '';
-    if (x.seasonal && x.seasonal.length) {
-      var sc = x.seasonal.map(function (s) {
-        return '<div class="season-card">'
-          + (s.tag ? '<span class="tag">' + esc(s.tag) + '</span>' : '')
-          + '<h3>' + esc(s.title) + '</h3>'
-          + '<p>' + esc(s.text) + '</p></div>';
-      }).join('');
-      seasonal = '<div class="section"><h2>3 月上旬限定看點</h2>'
-        + '<p class="data-note">花況與活動日期以官方最新公告為準，出發前再確認一次。</p>'
-        + '<div class="grid c2">' + sc + '</div></div>';
-    }
-
-    /* 最新情報：新開與必知 */
-    var whatsnew = '';
-    if (x.whatsnew && x.whatsnew.length) {
-      var nc = x.whatsnew.map(function (n) {
-        return '<div class="eat">'
-          + '<div class="top"><span class="nm">' + esc(n.name) + '</span>'
-          + (n.tag ? '<span class="tag-new">' + esc(n.tag) + '</span>' : '') + '</div>'
-          + (n.when ? '<div class="when-badge">' + esc(n.when) + '</div>' : '')
-          + '<p>' + esc(n.text) + '</p></div>';
-      }).join('');
-      whatsnew = '<div class="section"><h2>最新情報：新開與必知</h2>'
-        + '<div class="grid c2">' + nc + '</div></div>';
-    }
-
-    /* 美食名店口袋清單 */
-    var foodPicks = (x.foodPicks || []).map(function (e) {
-      return '<div class="eat">'
-        + '<div class="top"><span class="nm">' + esc(e.name) + '</span>'
-        + '<span class="jp">' + esc(e.jp) + '</span></div>'
-        + '<p>' + esc(e.text) + '</p>'
-        + '<div class="where">' + esc(e.where) + '</div></div>';
-    }).join('');
-    var foodPicksSec = foodPicks
-      ? '<div class="section"><h2>美食名店口袋清單</h2>'
-        + '<div class="grid c2">' + foodPicks + '</div></div>'
-      : '';
-
-    var heroUrl = x.hero ? imgUrl(d.id, x.hero, 1600) : '';
-    var hero = heroUrl
-      ? '<div class="dest-hero">'
-        + '<img src="' + heroUrl + '" alt="' + esc(d.name) + '" />'
-        + '<div class="scrim"></div>'
-        + '<div class="big-emoji">' + d.emoji + '</div>'
-        + '<div class="cap">'
-        + '<div class="romaji">' + esc(d.romaji) + '</div>'
-        + '<h2>' + esc(d.name) + '</h2>'
-        + '<div class="tagline">' + esc(d.tagline) + '</div>'
-        + '</div></div>'
-      : '';
-
-    return '<section class="panel is-active" id="panel-' + d.id + '" role="main" style="--dest:' + d.accent + '">'
-
-      + hero
-      + '<div class="dest-head">'
-      + '<p class="intro">' + esc(d.intro) + '</p>'
-      + '</div>'
-
-      + '<dl class="facts">' + facts + '</dl>'
-
-      + '<div class="section"><h2>為什麼選福岡</h2>'
-      + '<div class="grid c2">' + why + '</div></div>'
-
-      + seasonal
-      + whatsnew
-
-      + (howto ? '<div class="section"><h2>怎麼玩：第一次 vs 深度</h2>' + howto + '</div>' : '')
-
-      + '<div class="section" id="itinerary"><h2>5天4夜怎麼走（3/9–3/13）</h2>'
-      + '<div class="days">' + days + '</div></div>'
-
-      + '<div class="section"><h2>必吃</h2>'
-      + '<div class="grid c2">' + eats + '</div></div>'
-
-      + foodPicksSec
-
-      + (drinks ? '<div class="section"><h2>喝什麼</h2>'
-        + '<div class="grid c2">' + drinks + '</div></div>' : '')
-
-      + '<div class="section"><h2>必玩景點</h2>'
-      + '<div class="play-grid">' + plays + '</div></div>'
-
-      + (souvenirs ? '<div class="section"><h2>伴手禮怎麼買</h2>'
-        + '<div class="grid c2">' + souvenirs + '</div></div>' : '')
-
-      + '<div class="section"><h2>實用提醒</h2>'
-      + '<ul class="tips">' + tips + '</ul>'
-      + credits + '</div>'
-
+    return '<section class="section" id="itinerary">'
+      + '<h2>五天怎麼走</h2>'
+      + '<div>' + stages + '</div>'
       + '</section>';
   }
 
-  /* ── 組裝 ─────────────────────────────────────────── */
-  var FUKUOKA = DESTINATIONS[0];
-  var tabsEl = document.getElementById('tabs');
-  var panelsEl = document.getElementById('panels');
-  var heroEl = document.getElementById('heroPills');
+  /* ── 清單列 ── */
+  function rows(items, opt) {
+    opt = opt || {};
+    return '<div class="list-rows">' + items.map(function (e) {
+      var head = '<div class="row-head">'
+        + (e.tag ? '<span class="tag">' + esc(e.tag) + '</span>' : '')
+        + '<h3>' + esc(e.name || e.title) + '</h3>'
+        + (e.jp ? '<span class="sub">' + esc(e.jp) + '</span>' : '')
+        + (e.when ? '<span class="sub">' + esc(e.when) + '</span>' : '')
+        + '</div>';
+      var body = '<div class="row-body">' + esc(e.text)
+        + (e.where ? '<span class="where">哪裡 — ' + esc(e.where) + '</span>' : '')
+        + '</div>';
+      return '<div class="row-item">' + head + body + '</div>';
+    }).join('') + '</div>';
+  }
 
-  tabsEl.innerHTML = '<button role="tab" data-tab="fukuoka" aria-selected="true"'
-    + ' style="--tab-accent:' + FUKUOKA.accent + '">' + FUKUOKA.emoji + ' 福岡 5天4夜 · 3/9–3/13</button>'
-    + '<button class="theme-toggle" id="themeToggle" aria-label="切換深淺色">◐</button>';
+  /* ── 情報（三月看點＋新開必知） ── */
+  function news() {
+    var s = (X.seasonal || []);
+    var w = (X.whatsnew || []);
+    return '<section class="section" id="news">'
+      + '<h2>三月情報</h2>'
+      + '<p class="section-note">花況與活動日期以官方最新公告為準，出發前再確認一次。</p>'
+      + rows(s)
+      + (w.length ? '<h3 class="sub-head">新開與必知</h3>' + rows(w) : '')
+      + '</section>';
+  }
 
-  panelsEl.innerHTML = destPanel(FUKUOKA);
+  /* ── 必吃 ── */
+  function eats() {
+    var drinks = X.drinks || [];
+    var souvenirs = X.souvenirs || [];
+    var picks = X.foodPicks || [];
+    return '<section class="section" id="eats">'
+      + '<h2>必吃</h2>'
+      + rows(D.eats)
+      + (picks.length ? '<h3 class="sub-head">名店口袋清單</h3><div class="cols-2">'
+        + picks.map(function (e) { return rows([e]); }).join('') + '</div>' : '')
+      + (drinks.length ? '<h3 class="sub-head">喝什麼</h3><div class="cols-2">'
+        + drinks.map(function (e) { return rows([e]); }).join('') + '</div>' : '')
+      + (souvenirs.length ? '<h3 class="sub-head">伴手禮</h3><div class="cols-2">'
+        + souvenirs.map(function (e) { return rows([e]); }).join('') + '</div>' : '')
+      + '</section>';
+  }
 
-  /* 英雄區的每日小膠囊：點了捲到那一天 */
-  var DAY_PILLS = [
-    { day: 1, label: '3/9 屋台初夜' },
-    { day: 2, label: '3/10 太宰府・柳川' },
-    { day: 3, label: '3/11 由布院溫泉' },
-    { day: 4, label: '3/12 別府地獄' },
-    { day: 5, label: '3/13 採買返程' },
-  ];
-  heroEl.innerHTML = DAY_PILLS.map(function (p) {
-    return '<button class="hero-pill" data-day="' + p.day + '">' + esc(p.label) + '</button>';
-  }).join('');
+  /* ── 景點圖輯 ── */
+  function plays() {
+    var playImg = X.playImg || {};
+    var figs = D.plays.map(function (p) {
+      var slug = playImg[p.name];
+      var url = slug ? imgUrl(slug, 900) : '';
+      var ph = url ? '<img src="' + url + '" alt="' + esc(p.name) + '" loading="lazy" />' : '';
+      return '<figure>' + ph
+        + '<figcaption><div class="nm">' + esc(p.name) + '</div>'
+        + '<p class="ds">' + esc(p.text) + '</p></figcaption></figure>';
+    }).join('');
+    return '<section class="section" id="plays">'
+      + '<h2>景點圖輯</h2>'
+      + '<div class="play-grid">' + figs + '</div>'
+      + '</section>';
+  }
 
-  document.addEventListener('click', function (e) {
-    var pill = e.target.closest('[data-day]');
-    if (pill) {
-      var el = document.getElementById('day-' + pill.getAttribute('data-day'));
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
+  /* ── 玩法 ── */
+  function howto() {
+    if (!X.howto) return '';
+    var col = function (title, items) {
+      return '<div><h3>' + esc(title) + '</h3><ul>'
+        + (items || []).map(function (i) {
+          return '<li><strong>' + esc(i.t) + '</strong><span>' + esc(i.d) + '</span></li>';
+        }).join('') + '</ul></div>';
+    };
+    return '<section class="section howto" id="howto">'
+      + '<h2>玩法</h2>'
+      + '<div class="cols-2">'
+      + col('第一次來，這樣玩不會錯', X.howto.first)
+      + col('想玩深一點，像在地人', X.howto.deep)
+      + '</div></section>';
+  }
 
-  /* 深淺色切換 */
+  /* ── 提醒 ── */
+  function tips() {
+    return '<section class="section" id="tips">'
+      + '<h2>實用提醒</h2>'
+      + '<ol class="tips">' + D.tips.map(function (t) {
+        return '<li><span>' + esc(t) + '</span></li>';
+      }).join('') + '</ol>'
+      + '</section>';
+  }
+
+  /* ── Ft4 · Colophon ── */
+  function colophon() {
+    var credits = (typeof CREDITS !== 'undefined' ? CREDITS : []).map(function (c) {
+      return esc(c.title) + ' — ' + esc(c.artist) + '（' + esc(c.license) + '，'
+        + '<a href="' + esc(c.source) + '" target="_blank" rel="noopener">來源</a>）';
+    }).join('　·　');
+    return '<p>福岡五日 · 五天四夜行程誌 · 2027年3月9日（週二）–3月13日（週六）。'
+      + '內容為旅遊規劃建議，行程節奏與店家為個人推薦；營業時間、票價與列車時刻'
+      + '（尤其由布院之森訂位、太宰府梅花花況）以官方最新資訊為準。行程資訊查證於 2026 年 10 月。</p>'
+      + '<p>字體 — Fraunces · Noto Serif TC · Noto Sans TC · IBM Plex Mono（Google Fonts）。</p>'
+      + '<p>照片 — Wikimedia Commons：' + credits + '。</p>';
+  }
+
+  document.getElementById('main').innerHTML =
+    opening() + itinerary() + news() + eats() + plays() + howto() + tips();
+  document.getElementById('colophon').innerHTML = colophon();
+
+  /* 深淺色切換（沿用原功能） */
   var toggle = document.getElementById('themeToggle');
   var stored = null;
   try { stored = localStorage.getItem('theme'); } catch (err) { /* 隱私模式下忽略 */ }
@@ -343,15 +270,6 @@
     var next = cur === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     try { localStorage.setItem('theme', next); } catch (err) { /* 忽略 */ }
-  });
-
-  /* 回到頂端 */
-  var toTop = document.getElementById('toTop');
-  window.addEventListener('scroll', function () {
-    toTop.classList.toggle('show', window.scrollY > 700);
-  }, { passive: true });
-  toTop.addEventListener('click', function () {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 })();
 </script>
