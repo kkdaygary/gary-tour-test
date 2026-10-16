@@ -1,0 +1,8 @@
+{
+  "date": "2026-10-16",
+  "framework": "vanilla HTML",
+  "fonts": "system stack (replaced by Fraunces/Noto Serif TC/Noto Sans TC/IBM Plex Mono)",
+  "palette": "hex custom properties (replaced by OKLCH tokens.css)",
+  "motion": "none",
+  "spacing": "ad hoc (replaced by 4pt scale)"
+}
